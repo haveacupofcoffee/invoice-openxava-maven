@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE validators SYSTEM "dtds/validators.dtd">
+
+<!--
+	In your project use the name 'validators.xml' or 'validadores.xml'
+	
+	Instead of modifying this file it's better to create your own validators.xml 
+	(or validadores.xml) in your project to override this default value
+	for your application.	
+-->
+
+<validators>
+
+	<required-validator>
+		<validator-class class="org.openxava.validators.NotBlankCharacterValidator"/>
+		<for-stereotype stereotype="PERSON_NAME"/>
+
+	</required-validator>
+					
+</validators>
+  

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+	<JarScanner scanClassPath="false" />
+
+	<!-- HSQLDB  -->
+    <Resource name="jdbc/MavenTemplateDS" auth="Container" type="javax.sql.DataSource"
+	      maxTotal="20" maxIdle="5" maxWaitMillis="10000"
+	      username="ARookie" password="HelloMySQL" driverClassName="com.mysql.cj.jdbc.Driver"
+	      url="jdbc:mysql://mysqlinstance.cw5qdk7eto66.ca-central-1.rds.amazonaws.com:3306/test_openxava_maven?serverTimezone=America/Toronto"/>
+</Context>
