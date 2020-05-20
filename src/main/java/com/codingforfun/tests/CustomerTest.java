@@ -1,5 +1,3 @@
-package com.codingforfun.model;
-
 import org.openxava.tests.ModuleTestBase;
 
 
@@ -67,6 +65,11 @@ public class CustomerTest extends ModuleTestBase {
         execute("CRUD.refresh"); // Clicks on 'Refresh' button
         assertValue("number", "77"); // Verifies the 'number' field has 77
         assertValue("name", "JUNIT Customer MODIFIED"); // and 'name' has 'JUNIT Customer MODIFIED'
+
+        //Delete
+        execute("CRUD.delete");
+        // Verifies that the message 'Customer deleted successfully' is shown to the user
+        assertMessage("Customer deleted successfully");
 
 
 
