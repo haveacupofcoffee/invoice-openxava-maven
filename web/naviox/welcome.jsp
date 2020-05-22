@@ -17,8 +17,9 @@ welcome_point1=This is a additional explanatory line
 --%>
 
 <%
-String applicationName = NaviOXPreferences.getInstance().getapplicationName();
-MetaApplication metaApplication = MetaApplications.getMetaApplication(applicationName);
+/*String applicationName = NaviOXPreferences.getInstance().getapplicationName();
+MetaApplication metaApplication = MetaApplications.getMetaApplication(applicationName);*/
+MetaApplication metaApplication = MetaApplications.getMainMetaApplication();
 Locales.setCurrent(request);
 String oxVersion = org.openxava.controller.ModuleManager.getVersion();
 String title = (String) request.getAttribute("naviox.pageTitle");
@@ -37,6 +38,12 @@ if (title == null) title = metaApplication.getLabel();
 
 <h1><%=metaApplication.getLabel()%></h1>
 <p><%=metaApplication.getDescription()%></p>
+
+<%
+	System.out.println(metaApplication);
+	System.out.println("metaApplication.getLabel()" + metaApplication.getLabel());
+	System.out.println("metaApplication.getDescription()" + metaApplication.getDescription());
+%>
 <p><xava:message key="welcome_point1"/></p> 
 <p id="signin_tip"><xava:message key="signin_tip"/></p> 
 

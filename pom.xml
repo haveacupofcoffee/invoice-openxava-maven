@@ -2,8 +2,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.codingforfun</groupId>
-  <artifactId>openxava-maven</artifactId>
-  <version>6.2.2</version>
+  <artifactId>openxava-maven-6.3.2</artifactId>
+  <version>6.3.2</version>
   <packaging>jar</packaging>
   <name>openxava webapp</name>
   <url>http://maven.apache.org</url>
