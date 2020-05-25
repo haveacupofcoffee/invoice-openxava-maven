@@ -23,10 +23,8 @@ public class Customer {
     @Required
     private String name;
 
-
     @Embedded
     private Address address;
-
 
     public Address getAddress() {
         return address == null? new Address():address;

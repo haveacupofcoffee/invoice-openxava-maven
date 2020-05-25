@@ -1,55 +1,29 @@
 package com.codingforfun.model;
 
-import com.codingforfun.calculator.NextNumberForYearCalculator;
 import lombok.Data;
-import org.openxava.annotations.*;
-import org.openxava.calculators.CurrentDateCalculator;
-import org.openxava.calculators.CurrentLocalDateCalculator;
-import org.openxava.calculators.CurrentYearCalculator;
+import org.openxava.annotations.CollectionView;
+import org.openxava.annotations.View;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.Collection;
 
+@View(extendsView = "super.DEFAULT",
+      members = "orders {orders}"
+)
 
-
-@View(members =
-    "year, number, date;" +
-     "customer;" +
-     "details;" +
-     "remarks"
+@View(name = "NoCustomerNoOrders",
+    members =
+            "year, number, date;" +
+             "details;" +
+             "remarks"
 )
 
 @Data
 @Entity
-public class Invoice extends Identifiable{
+public class Invoice extends CommercialDocument {
 
-    @Column(length = 4)
-    @DefaultValueCalculator(CurrentYearCalculator.class)
-    private int year;
-
-
-    // To inject the value of year from Invoice to
-    // the calculator before calling to calculate()
-    @Column(length = 6)
-    @DefaultValueCalculator(value = NextNumberForYearCalculator.class,
-            properties = @PropertyValue(name="year"))
-    private int number;
-
-    @Required
-    @DefaultValueCalculator(CurrentLocalDateCalculator.class)
-    private LocalDate date;
-
-    // Customer is required
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @ReferenceView("Simple")  // The view named 'Simple' is used to display this reference
-    private Customer customer;
-
-    @ElementCollection
-    @ListProperties("product.number, product.description, quantity")
-    private Collection<Detail> details;
-
-    @Stereotype("MEMO")
-    private String remarks;
-
+    @OneToMany(mappedBy = "invoice")
+    @CollectionView("NoCustomerNoInvoice")
+    private Collection<Order> orders;
 }

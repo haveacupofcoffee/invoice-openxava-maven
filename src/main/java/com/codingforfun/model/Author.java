@@ -18,7 +18,9 @@ public class Author extends Identifiable {
     @Column(length = 50)
     @Required
     private String name;
-
+    /**
+     * doesn't show in List mode
+     */
     @OneToMany(mappedBy = "author")
     @ListProperties("number, description, price")
     private Collection<Product> products;

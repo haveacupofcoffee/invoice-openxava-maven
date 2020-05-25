@@ -14,7 +14,8 @@ openxava.init = function(application, module, initUI) {
 		}
 		$(openxava.staticInit);
 	}
-	openxava.initStrokeActions(application, module); 
+	openxava.initStrokeActions(application, module);
+	openxava.dataChanged = false; 
 }
 
 openxava.ajaxRequest = function(application, module, firstRequest, inNewWindow) {
@@ -139,7 +140,7 @@ openxava.refreshPage = function(result) {
 			dialog.dialog('widget').css('margin-left', '20px'); 
 			dialog.dialog('widget').css('margin-right', '20px'); 
 			dialog.dialog('option', 'height', 'auto');
-			dialog.dialog('option', 'position', { my: "center", at: "center", of: window, collision: "fit" } ); 			
+			dialog.dialog('option', 'position', { my: "center top", at: "center top+" + openxava.dialogLevel * 40, of: window, collision: "fit" } ); 
 			dialog.dialog('option', 'zIndex', 99999 );
 			if (result.dialogTitle.indexOf("!x:") === 0) {
 				dialog.dialog('option', 'title', result.dialogTitle.substring(3));
@@ -184,6 +185,7 @@ openxava.refreshPage = function(result) {
 	openxava.showMessages(result); 
 	openxava.resetRequesting(result);
 	openxava.propertiesUsedInCalculationsChange(result);
+	openxava.dataChanged = result.dataChanged; 
 	$('#xava_loading').hide();
 	$('#xava_loading2').hide();
 	if (result.postJS != null) {
@@ -191,7 +193,7 @@ openxava.refreshPage = function(result) {
 	}
 	document.body.style.cursor='auto';
 	if (openxava.postRefreshPage != null) openxava.postRefreshPage(); 
-	openxava.setUrlParam(result.urlParam); 
+	openxava.setUrlParam(result.urlParam);
 }
 
 openxava.initUI = function(application, module, currentRow, viewSimple) { 
@@ -206,6 +208,14 @@ openxava.initUI = function(application, module, currentRow, viewSimple) {
 	openxava.initViewSimple(application, module, viewSimple);
 	openxava.initTooltips();
 	openxava.initPlaceholder();
+	openxava.listenChanges(); 
+}
+
+
+openxava.listenChanges = function() { 
+	$("." + openxava.editorClass).change(function() { 
+		  openxava.dataChanged = true;
+	});
 }
 
 openxava.stylizeEditorsWithError = function(application, module, editorsWithError, editorsWithoutError) { 
@@ -425,8 +435,10 @@ openxava.initLists = function(application, module) {
 	    	ui.item.startPos = ui.item.index(); 
 	    },		
 	    stop: function( event, ui ) {
-	    	var tableId = $(event.target).closest("table").attr("id");
+	    	var table = $(event.target).closest("table");
+	    	var tableId = table.attr("id");
 	    	View.moveCollectionElement(tableId, ui.item.startPos - 1, ui.item.index() - 1);
+	    	openxava.renumberCollection(table);
 	    }	
 	});
 	openxava.watchColumnsSearch();
@@ -435,6 +447,16 @@ openxava.initLists = function(application, module) {
 	});
 	$('.xava_filter input').change(function() { // If changed, revise ModuleTestBase.setCollectionCondition()
 		$(this).parent().parent().find(".xava_comparator").fadeIn();
+	});
+}
+
+openxava.renumberCollection = function(table) { 
+	table.find("tr").each(function(rowIndex) {
+		$(this).find("a").each(function() {
+			var newHref = $(this).attr("href")
+				.replace(new RegExp("'row=\\d+,viewObject=", "g"), "'row=" + (rowIndex - 1) + ",viewObject=")
+			$(this).attr("href", newHref);
+		});
 	});
 }
 
@@ -691,6 +713,14 @@ openxava.removeColumn = function(application, module, columnId, tabObject) {
 
 openxava.setPageRowCount = function(application, module, collection, select) {	
 	openxava.executeAction(application, module, '', false, "List.setPageRowCount", "rowCount=" + select.value + ",collection=" + collection)
+}
+
+openxava.executeActionConfirmLosesChangedData = function(application, module, confirmMessage, takesLong, action, argv, range, alreadyProcessed, inNewWindow) { 
+	if (openxava.dataChanged) {
+		if (!confirm(openxava.confirmLoseChangesMessage)) return;
+		openxava.dataChanged = false;
+	}
+	openxava.executeAction(application, module, confirmMessage, takesLong, action, argv, range, alreadyProcessed, inNewWindow);
 }
 
 openxava.executeAction = function(application, module, confirmMessage, takesLong, action, argv, range, alreadyProcessed, inNewWindow) { 
@@ -1143,7 +1173,10 @@ openxava.markRowAsCut = function(collectionId, rowId) {
 
 
 openxava.fadeIn = function(selector, duration) { 
-	$(selector).fadeIn(duration);
+	// jQuery fadeIn() not work under certain race conditions
+	$(selector).css("opacity", "0"); 
+	$(selector).show(); 
+	$(selector).fadeTo(duration, 1);
 }
 
 openxava.show = function(selector) { 

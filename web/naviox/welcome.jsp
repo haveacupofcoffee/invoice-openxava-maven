@@ -5,7 +5,7 @@
 <%@page import="org.openxava.util.Locales"%>
 <%@page import="org.openxava.web.style.XavaStyle"%>
 <%@page import="org.openxava.util.XavaPreferences"%>
-<%@page import="com.openxava.naviox.util.NaviOXPreferences"%>
+<%@page import="org.openxava.web.Browsers"%> 
 
 <%-- To put your own text add entries in the i18n messages files of your project 
 In MyApplication-labels_en.properties:
@@ -17,9 +17,7 @@ welcome_point1=This is a additional explanatory line
 --%>
 
 <%
-/*String applicationName = NaviOXPreferences.getInstance().getapplicationName();
-MetaApplication metaApplication = MetaApplications.getMetaApplication(applicationName);*/
-MetaApplication metaApplication = MetaApplications.getMainMetaApplication();
+MetaApplication metaApplication = MetaApplications.getMainMetaApplication(); 
 Locales.setCurrent(request);
 String oxVersion = org.openxava.controller.ModuleManager.getVersion();
 String title = (String) request.getAttribute("naviox.pageTitle");
@@ -31,19 +29,18 @@ if (title == null) title = metaApplication.getLabel();
 <head>
 	<title><%=title%></title>
 	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-    <link href="<%=request.getContextPath()%>/xava/style/<%=XavaPreferences.getInstance().getStyleCSS()%>?ox=<%=oxVersion%>" rel="stylesheet" type="text/css">
+	<link href="<%=request.getContextPath()%>/xava/style/<%=XavaPreferences.getInstance().getStyleCSS()%>?ox=<%=oxVersion%>" rel="stylesheet" type="text/css">
+	<% if (Browsers.isIE(request)) { %>
+	<script type='text/javascript' src="<%=request.getContextPath()%>/xava/js/css-vars-ponyfill.js?ox=<%=oxVersion%>"></script>
+	<script type='text/javascript'>cssVars({ }); </script>	
+	<% } %>
+	
 </head>
 
 <body id="welcome" <%=XavaStyle.getBodyClass(request)%>>
 
 <h1><%=metaApplication.getLabel()%></h1>
 <p><%=metaApplication.getDescription()%></p>
-
-<%
-	System.out.println(metaApplication);
-	System.out.println("metaApplication.getLabel()" + metaApplication.getLabel());
-	System.out.println("metaApplication.getDescription()" + metaApplication.getDescription());
-%>
 <p><xava:message key="welcome_point1"/></p> 
 <p id="signin_tip"><xava:message key="signin_tip"/></p> 
 
