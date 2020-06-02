@@ -1,7 +1,10 @@
 package com.codingforfun.model;
 
+import com.codingforfun.calculator.PricePerUnitCalculator;
 import lombok.Data;
+import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.Depends;
+import org.openxava.annotations.PropertyValue;
 import org.openxava.annotations.Stereotype;
 
 import javax.persistence.Embeddable;
@@ -18,9 +21,22 @@ public class Detail {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private Product product;
 
+
+    @DefaultValueCalculator(value = PricePerUnitCalculator.class,
+        properties = @PropertyValue(name  = "productNumber", from = "product.number"))
     @Stereotype("MONEY")
-    @Depends("product.numer, quantity")
-    public BigDecimal getAmount() {
-        return new BigDecimal(quantity).multiply(product.getPrice());
+    private BigDecimal pricePerUnit;
+
+    public BigDecimal getPricePerUnit() {
+        return pricePerUnit == null ? BigDecimal.ZERO : pricePerUnit;
     }
+
+
+    @Stereotype("MONEY")
+    @Depends("pricePerUnit, quantity")
+    public BigDecimal getAmount() {
+        return new BigDecimal(quantity).multiply(getPricePerUnit());
+    }
+
+
 }

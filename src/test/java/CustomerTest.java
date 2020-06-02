@@ -5,7 +5,7 @@ import org.openxava.tests.ModuleTestBase;
 public class CustomerTest extends ModuleTestBase {
     public CustomerTest(String testName) {
         // We indicate the application name (Invoicing) and the module name (Customer)
-        super(testName, "Invocing", "Customer");
+        super(testName,"","Customer");
     }
 
     // The test methods must start with 'test'

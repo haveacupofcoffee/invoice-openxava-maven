@@ -17,5 +17,8 @@ public class Identifiable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Hidden
     private long id;
-    
+
+
+
+
 }
