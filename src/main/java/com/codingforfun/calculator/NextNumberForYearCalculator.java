@@ -19,7 +19,7 @@ public class NextNumberForYearCalculator implements ICalculator {
     @Override
     public Object calculate() throws Exception {
         //A JAP Query
-        Query query = XPersistence.getManager().createQuery("select max(i.number) from Invoice i where i.year = :year");
+        Query query = XPersistence.getManager().createQuery("select max(i.number) from CommercialDocument i where i.year = :year");
         // We use the injected year as a parameter for the query
         query.setParameter("year", year);
 
