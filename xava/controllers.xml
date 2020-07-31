@@ -21,5 +21,19 @@
     	</action>
 	</controller>    
     -->
+
+    <controller name="TestCallBack">
+        <extends controller="Typical"/>
+        <action name="TestAdd"
+                icon="bell"
+                mode="list"
+                class="com.codingforfun.action.test.TestAddAction"/>
+
+        <action name="TestUpdate"
+                icon="bell"
+                mode="list"
+                class="com.codingforfun.action.test.TestUpdateAction"/>
+
+    </controller>
     
 </controllers>
